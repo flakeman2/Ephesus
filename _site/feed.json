@@ -1,11 +1,11 @@
 {
     "version": "https://jsonfeed.org/version/1",
-    "title": "Flake - Minimalist Jekyll Theme",
-    "home_page_url": "https://blog.devinflake.com/",
-    "feed_url": "https://blog.devinflake.com/feed.json",
-    "description": "Flake - Minimalist Jekyll Theme",
-    "icon": "https://blog.devinflake.com/assets/images/apple-touch-icon.png",
-    "favicon": "https://blog.devinflake.com/assets/images/favicon.png",
+    "title": "Flake Blog",
+    "home_page_url": "http://localhost:4000/",
+    "feed_url": "http://localhost:4000/feed.json",
+    "description": "Hobbies and interests of Devin Flake",
+    "icon": "http://localhost:4000/assets/images/apple-touch-icon.png",
+    "favicon": "http://localhost:4000/assets/images/favicon.png",
     "expired": false,
     
     "author":  {
@@ -17,12 +17,12 @@
 "items": [
     
         {
-            "id": "https://blog.devinflake.com/hello_devinflake_com/",
+            "id": "http://localhost:4000/hello_devinflake_com/",
             "title": "Hello devinflake.com",
             "summary": null,
             "content_text": "I think I’ve finally found a simple blog solution that works for me.Jekyll transforms plain text into static sites/blogs. I like that I can create posts from the CLIand I’m hoping to use GitOps to push this blog to my k3s dramble cluster.I’m using a minialist theme called Ephesus by Hakan Torun.It’s simple and easy to customise but also has great code syntax highlighting. Ex:#include &lt;stdio.h&gt;//Function declarationsint is_prime(int n);void goldbach(int g);int main(){\tint number = 0;\twhile(1){\t\tprintf(\"Enter even number:\");\t\tscanf(\"%d\",&amp;number);\t\tif(number&gt;2 &amp;&amp; number%2==0){\t\t\tgoldbach(number);\t\t}\t\telse{\t\t\tprintf(\"Incorrect number!\");\t\t}\t\tprintf(\"\");\t}\treturn 0;}This is interestingThere’s still lots to learn but this is a good start.  Thank you Hakan Torun for the awesome Jekyll theme!",
             "content_html": "<p>I think I’ve finally found a simple blog solution that works for me.<a href=\"https://jekyllrb.com/\">Jekyll</a> transforms plain text into static sites/blogs. I like that I can create posts from the CLIand I’m hoping to use GitOps to push this blog to my k3s dramble cluster.</p><p>I’m using a minialist theme called <a href=\"https://github.com/onepase/Ephesus\">Ephesus</a> by Hakan Torun.It’s simple and easy to customise but also has great code syntax highlighting. Ex:</p><figure class=\"highlight\"><pre><code class=\"language-c\" data-lang=\"c\"><span class=\"cp\">#include &lt;stdio.h&gt;</span><span class=\"c1\">//Function declarations</span><span class=\"kt\">int</span> <span class=\"nf\">is_prime</span><span class=\"p\">(</span><span class=\"kt\">int</span> <span class=\"n\">n</span><span class=\"p\">);</span><span class=\"kt\">void</span> <span class=\"nf\">goldbach</span><span class=\"p\">(</span><span class=\"kt\">int</span> <span class=\"n\">g</span><span class=\"p\">);</span><span class=\"kt\">int</span> <span class=\"nf\">main</span><span class=\"p\">(){</span>\t<span class=\"kt\">int</span> <span class=\"n\">number</span> <span class=\"o\">=</span> <span class=\"mi\">0</span><span class=\"p\">;</span>\t<span class=\"k\">while</span><span class=\"p\">(</span><span class=\"mi\">1</span><span class=\"p\">){</span>\t\t<span class=\"n\">printf</span><span class=\"p\">(</span><span class=\"s\">\"Enter even number:\"</span><span class=\"p\">);</span>\t\t<span class=\"n\">scanf</span><span class=\"p\">(</span><span class=\"s\">\"%d\"</span><span class=\"p\">,</span><span class=\"o\">&amp;</span><span class=\"n\">number</span><span class=\"p\">);</span>\t\t<span class=\"k\">if</span><span class=\"p\">(</span><span class=\"n\">number</span><span class=\"o\">&gt;</span><span class=\"mi\">2</span> <span class=\"o\">&amp;&amp;</span> <span class=\"n\">number</span><span class=\"o\">%</span><span class=\"mi\">2</span><span class=\"o\">==</span><span class=\"mi\">0</span><span class=\"p\">){</span>\t\t\t<span class=\"n\">goldbach</span><span class=\"p\">(</span><span class=\"n\">number</span><span class=\"p\">);</span>\t\t<span class=\"p\">}</span>\t\t<span class=\"k\">else</span><span class=\"p\">{</span>\t\t\t<span class=\"n\">printf</span><span class=\"p\">(</span><span class=\"s\">\"Incorrect number!\"</span><span class=\"p\">);</span>\t\t<span class=\"p\">}</span>\t\t<span class=\"n\">printf</span><span class=\"p\">(</span><span class=\"s\">\"\"</span><span class=\"p\">);</span>\t<span class=\"p\">}</span>\t<span class=\"k\">return</span> <span class=\"mi\">0</span><span class=\"p\">;</span><span class=\"p\">}</span></code></pre></figure><h2 id=\"this-is-interesting\">This is interesting</h2><p>There’s still <strong>lots to learn</strong> but this is a good start.  Thank you <a href=\"https://hakan.io/\">Hakan Torun</a> for the awesome Jekyll theme!</p>",
-            "url": "https://blog.devinflake.com/hello_devinflake_com/",
+            "url": "http://localhost:4000/hello_devinflake_com/",
             
             
             

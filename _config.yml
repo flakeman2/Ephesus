@@ -1,9 +1,9 @@
 # Site settings
 site: Flake
-title: Flake - Minimalist Jekyll Theme
+title: Flake Blog
 keywords: flake, blog
 description: >-
-  Flake - Minimalist Jekyll Theme
+  Hobbies and interests of Devin Flake
 lang: en-US
 timezone:  Mountain/Boise
 repo: https://github.com/flakeman2/Ephesus # site repo [optional]
@@ -26,7 +26,6 @@ author:
 
 
 # URL settings
-#url: "http://127.0.0.1:4000" # Domain Name of host. [username].github.io for github pages
 url: "https://blog.devinflake.com" # Domain Name of host. [username].github.io for github pages
 permalink: pretty
 
