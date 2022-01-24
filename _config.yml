@@ -41,9 +41,11 @@ exclude:
   - Dockerfile
   - Gemfile
   - Gemfile.lock
+  - LICENSE
   - LICENSE.md
   - README.md
   - CONTRIBUTING.md
+  - CODE_OF_CONDUCT.md
 
 plugins:
   - jekyll-paginate
