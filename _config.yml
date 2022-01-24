@@ -9,7 +9,7 @@ timezone:  Mountain/Boise
 repo: https://github.com/flakeman2/Ephesus # site repo [optional]
 google_verify:      3B0vcgPJX7cXB-d8b6IRiEdvR4sv8sFm1IgaU39LT2k # Put your Google Verification here
 google_analytics:   G-ZRZG7LLQ0G # Put your Google Analytics code
-discus-identifier:  https://devinflake # https://devinflake.disqus.com/admin/install/platforms/universalcode/
+disqus-identifier:  devinflake # Your disque shortname, see https://disqus.com/admin/install/platforms/universalcode/
 
 # Author settings
 author:
