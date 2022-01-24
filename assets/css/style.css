@@ -69,8 +69,9 @@ body{
   background: var(--bg-hover-color);
 }
 
-.post-list .post-title{width: 80%; color: var(--primary-font-color); font-weight: 600;}
-.post-list .post-date{width: 20%; text-align: right;}
+.post-list .post-title{width: 30%; color: var(--primary-font-color); font-weight: 600; text-align: left;}
+.post-list .post-comment{width: 40%; text-align: center;}
+.post-list .post-date{width: 30%; text-align: right;}
 
 .post-header{
   width: 100%; 

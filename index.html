@@ -4,10 +4,9 @@ layout: default
 <div class="post-container">
 	{% for post in paginator.posts %}
         <div class="post-list">
-            {% if site.disqus-identifier %}
-            <a class="post-title" href="{{ site.url }}{{ post.url }}index.html#disqus_thread">{{ post.title }}</a>
-            {% else %}
             <a class="post-title" href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
+            {% if site.disqus-identifier %}
+            <a class="post-comment" href="{{ site.url }}{{ post.url }}#disqus_thread">0 Comments</a> <!-- '0 Comments' will be overwritten by Disqus if there are comments  -->
             {% endif %}
             <time datetime="{{ post.date | date_to_xmlschema }}" class="post-date">{{ post.date | date: "%m.%d.%Y" }}</time>
         </div>
