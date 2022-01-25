@@ -27,9 +27,17 @@ layout: default
 </div>
 <div class="navigation">
 	{% if page.previous %}
-		<a class="prev" href="{{ page.previous | relative_url }}">< {{ page.previous.title }}</a>
-	{% endif %} {% if page.next %}
-	<a class="next" href="{{ page.next | relative_url }}">{{ page.next.title }} ></a>
-{% endif %}
+	    <a class="prev" href="{{ page.previous | relative_url }}">&lt;-  {{ page.previous.title }}</a>
+    {% else %}
+        <span class="blank">&nbsp;</span>
+	{% endif %}
+
+    <a class="home" href="{{ site.url }}">home</a>
+
+    {% if page.next %}
+        <a class="next" href="{{ page.next | relative_url }}">{{ page.next.title }}  -&gt;</a>
+    {% else %}
+        <span class="blank">&nbsp;</span>
+    {% endif %}
 </div>
 {% include disqus.html %}

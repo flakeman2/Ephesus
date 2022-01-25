@@ -115,10 +115,11 @@ body{
   margin-bottom: 5px;
   background:var(--bg-color);
   border:1px dashed var(--border-color);
-
 }
-.navigation .prev{width: 45%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--primary-font-color); font-weight: 600; padding: 5px 10px;}
-.navigation .next{width: 45%; color: var(--primary-font-color); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 600; text-align: right; padding: 5px 10px;}
+.navigation .prev{width: 30%; color: var(--primary-font-color); font-weight: 600; padding: 5px 10px; text-align: left;}
+.navigation .home{width: 60%; padding: 5px 10px; text-align: center;}
+.navigation .next{width: 30%; color: var(--primary-font-color); font-weight: 600; padding: 5px 10px; text-align: right;}
+.navigation .blank{width: 30%;}
 
 .pagination{
   width: 100%; 
@@ -131,8 +132,8 @@ body{
   margin-bottom: 5px;
   background:var(--bg-color);
 }
-.pagination .prev{color: var(--primary-font-color); font-weight: 600;}
-.pagination .next{color: var(--primary-font-color); font-weight: 600; text-align: right;}
+.pagination .prev{width: 45%; color: var(--primary-font-color); font-weight: 600; text-align: left;}
+.pagination .next{width: 45%; color: var(--primary-font-color); font-weight: 600; text-align: right;}
 
 .blog-post-content{
   width: 100%;

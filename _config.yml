@@ -13,6 +13,7 @@ disqus-identifier:  devinflake # Your disque shortname, see https://disqus.com/a
 
 # Author settings
 author:
+  # Comment out any social media you don't want
   name: <a href="https://devinflake.com/">Devin Flake</a>
   bio: Site Reliability Engineer @<a href="https://www.adobe.com/">Adobe</a> <br> GNU/Linux + Open Source
   picture: assets/images/profile.jpg 
@@ -23,6 +24,8 @@ author:
   youtube: https://www.youtube.com/channel/UC_dRVgkvwvw7iC1xisdzP_w # youtube username
   linkedin: devinflake # linkedin username
   email: flakeman2@hotmail.com # email adress
+  about: true # about me page
+  rss: true # rss
 
 
 # URL settings
