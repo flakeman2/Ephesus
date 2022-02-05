@@ -3,11 +3,13 @@ layout: default
 ---
 
 <div class="post-container">
-	<div class="post-list">
-		<span class="post-title">{{page.title}}</span>
-	</div>
+    <div class="post-list">
+        <span class="post-title">{{page.title}}</span>
+        <a class="home" href="{{ site.url }}">home</a>
+        <span class="blank">&nbsp;</span>
+    </div>
 </div>
 <div class="blog-post-content">
-	<h1>{{page.title}}</h1>
-	{{ content }}
+    <h1>{{page.title}}</h1>
+    {{ content }}
 </div>
