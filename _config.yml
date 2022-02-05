@@ -3,7 +3,7 @@ site: Flake
 title: Flake Blog
 keywords: flake, blog
 description: >-
-  Hobbies and interests of Devin Flake
+  Hobbies and Interests of Devin Flake
 lang: en-US
 timezone:  Mountain/Boise
 repo: https://github.com/flakeman2/Ephesus # site repo [optional]

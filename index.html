@@ -2,6 +2,9 @@
 layout: default
 ---
 <div class="post-container">
+    <span class="posts">Posts</span>
+    <a class="tag" href="{{ site.url }}/tags/">Tags in Blog</a>
+    <span class="date">Date</span>
 	{% for post in paginator.posts %}
         <div class="post-list">
             <a class="post-title" href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
