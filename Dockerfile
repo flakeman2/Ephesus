@@ -1,4 +1,4 @@
-FROM ruby:3.1.0-buster AS build
+FROM --platform=$BUILDPLATFORM ruby:3.1.0-buster AS build
 COPY . /Ephesus
 WORKDIR /Ephesus
 RUN bundle install \
