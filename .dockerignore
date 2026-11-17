@@ -1,0 +1,14 @@
+# Keep the build context lean and the build deterministic.
+#
+# _site and .jekyll-cache are the two that matter: `COPY . /Ephesus` was
+# shipping a previously built _site and a stale incremental cache into the
+# image, so a cached layer could serve output that did not match the source
+# that layer was built from. The Dockerfile rebuilds both anyway.
+.git
+.github
+.jekyll-cache
+_site
+node_modules
+Dockerfile
+.dockerignore
+*.log

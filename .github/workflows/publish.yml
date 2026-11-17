@@ -1,0 +1,205 @@
+name: Build and publish the blog image
+
+# Publishing a post is now: add _posts/…, commit, push. This workflow builds
+# the ARM64 image, verifies it actually serves the site, pushes it to Docker
+# Hub, then opens the bump PR against raspberry-pi-dramble. Argo CD never sees
+# this repository — it only reads the tag that lands in that PR.
+#
+# Required repository secrets (both live here, neither grants cluster access):
+#   DOCKERHUB_USERNAME / DOCKERHUB_TOKEN  push to flakeman2/jekyll
+#   DRAMBLE_BUMP_TOKEN                    fine-grained PAT scoped to
+#                                         flakeman2/raspberry-pi-dramble with
+#                                         Contents: read/write + Pull requests: read/write
+#
+# Tag scheme: sha-<7 of the Ephesus commit>. Not 1.0.7 — a content-derived tag
+# cannot be reused, so it is traceable to its source commit and safe under the
+# deployment's `imagePullPolicy: IfNotPresent` (a node that pulled it once can
+# never be holding a stale copy of a *different* build). It also removes the
+# "which number is next" step and makes the 1.0.4/1.0.5 source/image drift
+# impossible by construction.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '_posts/**'
+      - '_config.yml'
+      - '_layouts/**'
+      - '_includes/**'
+      - 'assets/**'
+      - 'Dockerfile'
+      - 'Gemfile'
+      - 'Gemfile.lock'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-blog
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Ephesus
+        uses: actions/checkout@v4
+
+      - name: Compute the tag
+        id: tag
+        run: |
+          echo "value=sha-$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up QEMU (the final stage is arm64)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # The Dockerfile pins the *build* stage to $BUILDPLATFORM, so
+      # `bundle install` and `jekyll build` run natively on the runner and only
+      # the final nginx stage is arm64 — no cross-compilation, no Pi required.
+      - name: Build for linux/arm64
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/arm64
+          push: false
+          load: true
+          tags: flakeman2/jekyll:${{ steps.tag.outputs.value }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Verify before anything is pushed or any PR is opened: a broken site
+      # must not reach the cluster manifest. QEMU runs the arm64 nginx.
+      - name: Smoke test the image
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tag.outputs.value }}"
+          docker run -d --name smoke -p 8080:80 "flakeman2/jekyll:${TAG}"
+          code=000
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /tmp/home.html -w '%{http_code}' http://127.0.0.1:8080/ || true)
+            [ "$code" = "200" ] && break
+            sleep 2
+          done
+          echo "homepage -> HTTP ${code}"
+          [ "$code" = "200" ]
+          grep -qiE '<html|<!doctype' /tmp/home.html
+          entries=$(curl -s http://127.0.0.1:8080/atom.xml | grep -c '<entry>' || true)
+          echo "atom feed entries: ${entries}"
+          [ "${entries}" -ge 1 ]
+          docker rm -f smoke >/dev/null
+
+      - name: Push the image
+        run: docker push "flakeman2/jekyll:${{ steps.tag.outputs.value }}"
+
+      - name: Checkout raspberry-pi-dramble
+        uses: actions/checkout@v4
+        with:
+          repository: flakeman2/raspberry-pi-dramble
+          ref: dev
+          token: ${{ secrets.DRAMBLE_BUMP_TOKEN }}
+          path: dramble
+
+      # Bump the deployment (the only file that decides what runs) plus the
+      # current-state tables that quote the running tag. Deliberately NOT
+      # docs/cluster-status.md — a dated rebuild snapshot — and not the
+      # by-hand build command in docs/blog-rebuild.md, which documents the
+      # flow this workflow replaces.
+      - name: Bump the image tag
+        id: bump
+        working-directory: dramble
+        env:
+          NEW_TAG: ${{ steps.tag.outputs.value }}
+        run: |
+          set -euo pipefail
+          # Strip the prefix rather than `cut -d: -f3`: "flakeman2/jekyll" has
+          # no colon of its own, so the tag is the *second* field, and a tag
+          # containing a colon would break cut anyway.
+          OLD_TAG=$(grep -oE 'flakeman2/jekyll:[^[:space:]`|]+' \
+            cluster/workloads/jekyll/deployment.yaml | head -1 \
+            | sed 's|^flakeman2/jekyll:||')
+          if [ -z "$OLD_TAG" ]; then
+            echo "::error::could not read the current image tag from the deployment"
+            exit 1
+          fi
+          echo "old=${OLD_TAG} new=${NEW_TAG}"
+          if [ "$OLD_TAG" = "$NEW_TAG" ]; then
+            echo "already bumped; nothing to do"
+            echo "changed=no" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          for f in \
+            cluster/workloads/jekyll/deployment.yaml \
+            cluster/workloads/README.md \
+            docs/architecture.md \
+            docs/blog-rebuild.md; do
+            if grep -q "flakeman2/jekyll:${OLD_TAG}" "$f"; then
+              sed -i "s|flakeman2/jekyll:${OLD_TAG}|flakeman2/jekyll:${NEW_TAG}|g" "$f"
+              echo "  bumped ${f}"
+            fi
+          done
+          echo "changed=yes" >> "$GITHUB_OUTPUT"
+
+      - name: Open the bump PR
+        if: steps.bump.outputs.changed == 'yes'
+        working-directory: dramble
+        env:
+          GH_TOKEN: ${{ secrets.DRAMBLE_BUMP_TOKEN }}
+          NEW_TAG: ${{ steps.tag.outputs.value }}
+          SOURCE_COMMIT: ${{ steps.tag.outputs.commit }}
+        run: |
+          set -euo pipefail
+          BRANCH="bump/jekyll-${NEW_TAG}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "Bump blog image to flakeman2/jekyll:${NEW_TAG}"
+
+          # Same Ephesus commit re-run? The branch and PR already exist.
+          if git ls-remote --exit-code origin "refs/heads/${BRANCH}" >/dev/null 2>&1; then
+            echo "branch ${BRANCH} already exists; PR is already open"
+            exit 0
+          fi
+          git push origin "$BRANCH"
+
+          BODY="Automated bump from [Ephesus](https://github.com/flakeman2/Ephesus) commit \`${SOURCE_COMMIT}\`.
+
+          | | |
+          |---|---|
+          | Image | \`flakeman2/jekyll:${NEW_TAG}\` |
+          | Source commit | \`${SOURCE_COMMIT}\` |
+          | Built by | \`.github/workflows/publish.yml\` (arm64, smoke-tested before push) |
+
+          The tag is derived from the Ephesus commit, so the deployed tag names
+          its own source — the 1.0.4/1.0.5 drift cannot recur.
+
+          **This targets \`dev\`.** Argo CD watches \`master\`, so promote this PR
+          to \`master\` for the blog to update."
+
+          gh pr create \
+            --repo flakeman2/raspberry-pi-dramble \
+            --base dev \
+            --head "$BRANCH" \
+            --title "Bump blog image to flakeman2/jekyll:${NEW_TAG}" \
+            --body "$BODY"
+
+      - name: Summary
+        run: |
+          {
+            echo "### Blog image published"
+            echo ""
+            echo "- tag: \`${{ steps.tag.outputs.value }}\`"
+            echo "- source: \`${{ steps.tag.outputs.commit }}\`"
+            echo "- bump PR opened: \`${{ steps.bump.outputs.changed }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
