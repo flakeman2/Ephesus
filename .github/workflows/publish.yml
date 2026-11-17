@@ -111,10 +111,13 @@ jobs:
           path: dramble
 
       # Bump the deployment (the only file that decides what runs) plus the
-      # current-state tables that quote the running tag. Deliberately NOT
-      # docs/cluster-status.md — a dated rebuild snapshot — and not the
-      # by-hand build command in docs/blog-rebuild.md, which documents the
-      # flow this workflow replaces.
+      # current-state tables that quote the running tag: the workload README,
+      # the architecture tables, and both tag references in docs/blog-rebuild.md
+      # — the current-state row *and* the hand-build example, so the fallback
+      # command matches what is actually deployed.
+      #
+      # Deliberately NOT docs/cluster-status.md: it is a dated snapshot of the
+      # 2026-11-16 rebuild, so its tag references are history, not state.
       - name: Bump the image tag
         id: bump
         working-directory: dramble
