@@ -86,7 +86,7 @@ jobs:
           TAG="${{ steps.tag.outputs.value }}"
           docker run -d --name smoke -p 8080:80 "flakeman2/jekyll:${TAG}"
           code=000
-          for i in $(seq 1 30); do
+          for _ in $(seq 1 30); do
             code=$(curl -s -o /tmp/home.html -w '%{http_code}' http://127.0.0.1:8080/ || true)
             [ "$code" = "200" ] && break
             sleep 2
@@ -187,8 +187,8 @@ jobs:
           The tag is derived from the Ephesus commit, so the deployed tag names
           its own source — the 1.0.4/1.0.5 drift cannot recur.
 
-          **This targets \`dev\`.** Argo CD watches \`master\`, so promote this PR
-          to \`master\` for the blog to update."
+          **This targets \`dev\`,** which is what Argo CD watches — the post goes
+          live when this PR merges."
 
           gh pr create \
             --repo flakeman2/raspberry-pi-dramble \
