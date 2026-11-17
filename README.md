@@ -52,17 +52,17 @@ touch content and:
 ```
  Ephesus master ──> GitHub Actions ──> Docker Hub (sha-<7>)
                           │
-                          └──> bump PR in raspberry-pi-dramble
+                          └──> bump PR in raspberry-pi-dramble (base: dev)
                                         │
-                          merge to dev ─┴─> promote to master
-                                                    │
-                                          Argo CD syncs the tag
-                                                    │
-                                            blog.devinflake.com
+                                  merge to dev
+                                        │
+                              Argo CD syncs the tag
+                                        │
+                                blog.devinflake.com
 ```
 
-**Two merges, not one:** the bump PR targets `dev`, and Argo CD watches
-`master`, so the post is not live until the promotion PR merges too.
+**One merge:** the bump PR targets `dev`, and Argo CD watches `dev`, so the
+post goes live as soon as that PR merges.
 
 The tag *is* the source commit, so the deployed tag names its own source and
 the `1.0.4`/`1.0.5` drift — an image built from a stale commit — cannot recur.
@@ -70,7 +70,7 @@ The tag is also never reused, which keeps the deployment's
 `imagePullPolicy: IfNotPresent` honest.
 
 Full details, including the by-hand fallback build, are in
-[docs/blog-rebuild.md](https://github.com/flakeman2/raspberry-pi-dramble/blob/master/docs/blog-rebuild.md).
+[docs/blog-rebuild.md](https://github.com/flakeman2/raspberry-pi-dramble/blob/dev/docs/blog-rebuild.md).
 
 ### Secrets
 
