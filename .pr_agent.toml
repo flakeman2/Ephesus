@@ -1,0 +1,18 @@
+# PR-Agent configuration — https://docs.pr-agent.ai/usage-guide/configuration_options
+#
+# Deliberately minimal. Their own docs: "Your configuration file should be
+# minimal, and edit only the relevant values. Don't copy the entire
+# configuration options, since it can lead to legacy problems when something
+# changes."
+
+[config]
+# Free tier — Google AI Studio's Gemini Flash models: no card, no published
+# daily cap, and one of the few free tiers whose model handles the structured
+# output PR-Agent requires.
+#
+# Overrides the shipped default (gpt-6.1-sol), which needs a paid OpenAI key.
+model = "gemini/gemini-3.8-flash"
+
+# Both are on the free tier, so a rate-limit blip on the primary degrades
+# instead of failing the review.
+fallback_models = ["gemini/gemini-3.5-flash-lite"]

@@ -1,0 +1,61 @@
+name: PR Agent
+
+# AI review for pull requests — https://docs.pr-agent.ai/
+#
+# Runs /describe and /review on opened PRs. PR-Agent skips `synchronize` by
+# default, so pushing to an open PR does not burn quota; opt in per-event via
+# github_action_config.pr_actions in .pr_agent.toml.
+#
+# Deliberately NOT pinned to a SHA or tag.
+#
+# Upstream suggests pinning the action to a commit SHA, but this repo's own
+# investigation showed why that buys little here: the action's Dockerfile is a
+# single line —
+#
+#     FROM pragent/pr-agent:github_action
+#
+# — so the PR-Agent code that actually runs comes from that *image* tag, not
+# from the commit a SHA would pin. Pinning the wrapper would therefore give the
+# appearance of supply-chain safety while pinning almost none of it, and would
+# cost automatic bug and security fixes plus a manual bump treadmill.
+#
+# The balance favours floating: this tool posts PR comments. It is not in the
+# deploy path — nothing it does reaches the cluster, and a bad or missing
+# review is an annoyance rather than an outage. If that ever changes, pin the
+# image instead of the wrapper:
+#
+#     uses: docker://pragent/pr-agent@sha256:<digest>
+#
+# (SECURITY.md#enhanced-security-with-docker-digest), which bypasses the
+# wrapper entirely. Digest at time of writing:
+#   sha256:548e894a88071180832b2f4233f734d0acd0db1a879e2fcbaa70bac8b8372ebe
+#
+# Model: Gemini Flash on the free tier — not the default gpt-6.1-sol, which
+# needs a paid OpenAI key. See .pr_agent.toml.
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: pr-agent-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr_agent_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR Agent
+        uses: the-pr-agent/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # LiteLLM's native key for `gemini/…` models.
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # PR-Agent's own [google_ai_studio] table reads this form instead;
+          # setting both removes a debugging round-trip if one path changes.
+          GOOGLE_AI_STUDIO__GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
