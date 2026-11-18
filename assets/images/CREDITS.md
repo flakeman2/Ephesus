@@ -15,3 +15,4 @@ respective owners and are used here to refer to the projects this blog post is
 about.
 
 Recolour via the CDN: `https://cdn.simpleicons.org/<slug>/<hex>`.
+| `simpleicons-googlegemini.svg` | Google Gemini | Google |
