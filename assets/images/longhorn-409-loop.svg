@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" width="900" height="360" role="img" aria-labelledby="title desc">
+  <title id="title">The Longhorn 409 conflict loop</title>
+  <desc id="desc">A stale informer cache keeps writing an old resource version; the API server rejects it with 409 Conflict and the controller retries immediately. A rolling restart rebuilt the informer cache and stopped the loop.</desc>
+  <style>
+    .bg { fill: #fbfcfe; }
+    .h { font: 700 21px system-ui, sans-serif; fill: #0f172a; }
+    .n { font: 15px system-ui, sans-serif; fill: #1e293b; }
+    .s { font: 13px system-ui, sans-serif; fill: #475569; }
+    .bad { fill: #fff1f2; stroke: #e11d48; stroke-width: 2; rx: 10; }
+    .good { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2; rx: 10; }
+    .arrow { stroke: #e11d48; stroke-width: 2.5; fill: none; marker-end: url(#r); }
+    .fix { stroke: #16a34a; stroke-width: 2.5; fill: none; marker-end: url(#g); }
+    .cap { font: 700 13px system-ui, sans-serif; fill: #be123c; }
+    .capg { font: 700 13px system-ui, sans-serif; fill: #15803d; }
+  </style>
+  <defs>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e11d48"/>
+    </marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="900" height="360"/>
+  <text class="h" x="40" y="42">~50 failed writes per second, with nothing changing</text>
+
+  <rect class="bad" x="50" y="80" width="240" height="78"/>
+  <text class="n" x="66" y="108">Longhorn manager</text>
+  <text class="s" x="66" y="132">stale informer cache</text>
+  <text class="s" x="66" y="150">after the datastore move</text>
+
+  <rect class="bad" x="330" y="80" width="240" height="78"/>
+  <text class="n" x="346" y="108">PUT nodes.longhorn.io</text>
+  <text class="s" x="346" y="132">with an old resourceVersion</text>
+  <text class="s" x="346" y="150">object never actually changes</text>
+
+  <rect class="bad" x="610" y="80" width="240" height="78"/>
+  <text class="n" x="626" y="108">API server: 409 Conflict</text>
+  <text class="s" x="626" y="132">1,430 of 1,518 PUTs</text>
+  <text class="s" x="626" y="150">in one 30-second sample</text>
+
+  <path class="arrow" d="M 290 119 L 325 119"/>
+  <path class="arrow" d="M 570 119 L 605 119"/>
+  <path class="arrow" d="M 730 158 C 730 214 170 214 170 162"/>
+  <text class="cap" x="386" y="204">immediate retry, no backoff relief</text>
+
+  <path class="fix" d="M 450 222 L 450 252"/>
+  <rect class="good" x="230" y="258" width="440" height="70"/>
+  <text class="n" x="248" y="286">Rolling restart of longhorn-manager (one at a time)</text>
+  <text class="s" x="248" y="310">and longhorn-global-manager → fresh informer list</text>
+  <text class="capg" x="396" y="340">0 conflicts · nettop 99% → 15–23% · 5 volumes untouched</text>
+</svg>

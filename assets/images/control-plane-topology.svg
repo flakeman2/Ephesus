@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" width="900" height="430" role="img" aria-labelledby="title desc">
+  <title id="title">Control plane topology before and after the move</title>
+  <desc id="desc">Before: one Raspberry Pi runs the k3s server, Longhorn engine and monitoring on one contended disk. After: a tainted x86_64 server owns the datastore and all four Pis are agents.</desc>
+  <style>
+    .bg { fill: #fbfcfe; }
+    .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 12; }
+    .bad { fill: #fff1f2; stroke: #e11d48; stroke-width: 2; rx: 10; }
+    .good { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2; rx: 10; }
+    .box { fill: #eef2ff; stroke: #6366f1; stroke-width: 2; rx: 8; }
+    .pi { fill: #f8fafc; stroke: #64748b; stroke-width: 2; rx: 8; }
+    .h { font: 700 19px system-ui, sans-serif; fill: #0f172a; }
+    .t { font: 15px system-ui, sans-serif; fill: #1e293b; }
+    .s { font: 13px system-ui, sans-serif; fill: #475569; }
+    .red { fill: #be123c; font: 700 14px system-ui, sans-serif; }
+    .green { fill: #15803d; font: 700 14px system-ui, sans-serif; }
+    .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#a); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="900" height="430"/>
+
+  <rect class="panel" x="18" y="18" width="410" height="394"/>
+  <text class="h" x="38" y="50">Before — 2026-11-18</text>
+  <rect class="bad" x="38" y="70" width="370" height="120"/>
+  <text class="t" x="54" y="96">kube1  ·  Raspberry Pi 4  ·  4 GB, no swap</text>
+  <rect class="box" x="54" y="110" width="105" height="30"/>
+  <text class="s" x="62" y="130">k3s + kine</text>
+  <rect class="box" x="167" y="110" width="115" height="30"/>
+  <text class="s" x="175" y="130">Longhorn engine</text>
+  <rect class="box" x="290" y="110" width="102" height="30"/>
+  <text class="s" x="298" y="130">monitoring</text>
+  <text class="red" x="54" y="172">79% iowait · 39 s compaction · 17 restarts</text>
+  <path class="arrow" d="M 223 190 L 223 222"/>
+  <rect class="pi" x="88" y="228" width="270" height="54"/>
+  <text class="t" x="104" y="250">kube2 / kube3 / kube4 — agents</text>
+  <text class="s" x="104" y="270">workloads and sites keep serving</text>
+  <text class="s" x="38" y="320">Datastore sits on the busiest disk.</text>
+  <text class="s" x="38" y="344">Argo selfHeal retries into a stalled API.</text>
+  <text class="s" x="38" y="382">MetalLB .201 (unchanged)</text>
+
+  <rect class="panel" x="472" y="18" width="410" height="394"/>
+  <text class="h" x="492" y="50">After — 2026-11-21</text>
+  <rect class="good" x="492" y="70" width="370" height="86"/>
+  <text class="t" x="508" y="96">dflake-nettop  ·  x86_64  ·  fast disk</text>
+  <text class="s" x="508" y="120">k3s server + kine datastore, tainted NoSchedule</text>
+  <text class="green" x="508" y="142">15–23% CPU · 0 iowait · 0.1–0.5 s compaction</text>
+  <path class="arrow" d="M 677 156 L 677 190"/>
+  <rect class="pi" x="492" y="196" width="370" height="96"/>
+  <text class="t" x="508" y="220">kube1 / kube2 / kube3 / kube4 — agents</text>
+  <text class="s" x="508" y="244">Longhorn engines, Argo CD, Prometheus, Grafana</text>
+  <text class="s" x="508" y="268">5 volumes healthy · all public names unchanged</text>
+  <text class="s" x="492" y="330">API endpoint: 192.168.0.61 → 192.168.0.44</text>
+  <text class="s" x="492" y="354">Ingress address: 192.168.0.201 (never moved)</text>
+  <text class="green" x="492" y="392">12/12 Argo Applications Synced / Healthy</text>
+</svg>

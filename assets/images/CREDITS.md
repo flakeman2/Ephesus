@@ -16,3 +16,14 @@ about.
 
 Recolour via the CDN: `https://cdn.simpleicons.org/<slug>/<hex>`.
 | `simpleicons-googlegemini.svg` | Google Gemini | Google |
+
+## Diagrams
+
+The following were drawn for the 2026-11-21 control-plane post and contain no
+third-party artwork:
+
+| File | Description |
+|---|---|
+| `control-plane-topology.svg` | Before/after topology of the k3s control plane |
+| `control-plane-load.svg` | Measured CPU, 409-conflict and compaction changes |
+| `longhorn-409-loop.svg` | The Longhorn stale-cache retry loop and its fix |

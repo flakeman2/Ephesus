@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" width="900" height="400" role="img" aria-labelledby="title desc">
+  <title id="title">Load before and after the Longhorn restart</title>
+  <desc id="desc">Three measurements: nettop CPU fell from 99 percent to 23 percent, Longhorn node PUT conflicts from 1430 to zero per 30 seconds, and kine compaction from 39.3 seconds to under half a second.</desc>
+  <style>
+    .bg { fill: #fbfcfe; }
+    .h { font: 700 21px system-ui, sans-serif; fill: #0f172a; }
+    .lbl { font: 15px system-ui, sans-serif; fill: #334155; }
+    .before { fill: #e11d48; }
+    .after { fill: #16a34a; }
+    .val { font: 700 14px system-ui, sans-serif; fill: #0f172a; }
+    .note { font: 13px system-ui, sans-serif; fill: #64748b; }
+    .axis { stroke: #cbd5e1; stroke-width: 1; }
+  </style>
+  <rect class="bg" width="900" height="400"/>
+  <text class="h" x="40" y="42">Measured before → after the rolling restart</text>
+  <text class="note" x="40" y="66">Red = the problem. Green = steady state, verified over three 30-second samples.</text>
+
+  <text class="lbl" x="40" y="112">k3s-server CPU on nettop</text>
+  <rect class="before" x="300" y="94" width="396" height="24" rx="4"/>
+  <text class="val" x="706" y="111">99%</text>
+  <rect class="after" x="300" y="124" width="92" height="24" rx="4"/>
+  <text class="val" x="402" y="141">23%</text>
+
+  <text class="lbl" x="40" y="202">PUT longhorn.io/nodes → 409 in 30 s</text>
+  <rect class="before" x="300" y="184" width="396" height="24" rx="4"/>
+  <text class="val" x="706" y="201">1,430</text>
+  <rect class="after" x="300" y="214" width="4" height="24" rx="2"/>
+  <text class="val" x="314" y="231">0</text>
+
+  <text class="lbl" x="40" y="292">Slowest kine compaction</text>
+  <rect class="before" x="300" y="274" width="396" height="24" rx="4"/>
+  <text class="val" x="706" y="291">39.3 s</text>
+  <rect class="after" x="300" y="304" width="5" height="24" rx="2"/>
+  <text class="val" x="315" y="321">0.47 s</text>
+
+  <line class="axis" x1="40" y1="348" x2="860" y2="348"/>
+  <text class="note" x="40" y="374">There was no iowait on nettop at any point — this was CPU burned on failed writes, not a disk problem.</text>
+</svg>
