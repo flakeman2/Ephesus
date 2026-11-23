@@ -161,10 +161,10 @@ Argo CD `v3.6.1` (chart `10.18.0`) was adopted in phases:
 - **Phase 4** — kustomize/kubeconform/gitleaks CI gates and the Ephesus image
   pipeline.
 
-Today the root Application owns a `drumble` AppProject and **fifteen child
+Today the root Application owns a `dramble` AppProject and **fifteen child
 Applications** — sixteen total — declared explicitly in
 `gitops/kustomization.yaml`. There is no ApplicationSet at this scale. The root
-uses the `default` project because it creates `drumble` itself, the AppProject
+uses the `default` project because it creates `dramble` itself, the AppProject
 uses wave `-10`, and bootstrap files stay out of the build so Argo cannot manage
 its own installer. Longhorn keeps `prune: false` and does not use
 `ServerSideApply`; its CRDs own the volume records and there is no off-cluster
