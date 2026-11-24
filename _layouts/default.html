@@ -1,7 +1,12 @@
 {% include header.html %}
 <div class="container">
 	<div class="profile">
-		<a href="{{ site.url }}"><img src="{{site.author.picture}}" class="profile-image"></a>
+		<div class="profile-image-container">
+			<a href="{{ site.url }}"><img src="{{site.author.picture}}" class="profile-image"></a>
+			{% if page.url == '/' %}
+			<a class="profile-write-link" href="{{ site.url }}/post">Write</a>
+			{% endif %}
+		</div>
 		<div class="profile-about">
 			<h2 style="margin-bottom: 0; font-weight: 700;">{{site.author.name}}</h2>
 			{% if site.author.facebook %}

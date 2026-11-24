@@ -160,9 +160,10 @@ body{
   padding: 5px 10px;
   margin-bottom: 20px;
 }
-.profile-image-container{width: 40%;}
+.profile-image-container{width: 40%; text-align: center;}
 .profile-image{width: 128px; height: 128px; border-radius: 50%; transition: transform .2s;}
 .profile-image:hover{transform: scale(1.05);}
+.profile-write-link{display: inline-block; margin-top: 8px; font-weight: 600;}
 .profile-about{width:60%; text-align: right;}
 
 .font-2{font-size: 2rem;}
