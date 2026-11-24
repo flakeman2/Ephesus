@@ -23,6 +23,7 @@ on:
     branches: [master]
     paths:
       - '_posts/**'
+      - '_pages/**'
       - '_config.yml'
       - '_layouts/**'
       - '_includes/**'
