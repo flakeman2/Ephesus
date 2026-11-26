@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Post editor
+hide_title: true
 permalink: /post/
 description: Write, preview, and submit posts for the Flake blog.
 ---
