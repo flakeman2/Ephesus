@@ -160,7 +160,7 @@ body{
   padding: 5px 10px;
   margin-bottom: 20px;
 }
-.profile-image-container{width: 40%; text-align: center;}
+.profile-image-container{width: 40%; display: flex; align-items: center; gap: 10px;}
 .profile-image{width: 128px; height: 128px; border-radius: 50%; transition: transform .2s;}
 .profile-image:hover{transform: scale(1.05);}
 .profile-write-link{display: inline-block; margin-top: 8px; font-weight: 600;}
@@ -258,11 +258,13 @@ pre{font-size: 14px; max-width: 90vw; overflow: auto;}
   border-radius: 12px;
   font-weight: 600;
 }
-.cms-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.cms-view { width: 100%; }
+.cms-header-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 .cms-toolbar, .cms-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 .cms-toolbar { margin-bottom: 8px; }
 .cms-toolbar button,
 .cms-actions button,
+.cms-header-actions button,
 .cms-queue button {
   font: inherit;
   cursor: pointer;
@@ -274,8 +276,10 @@ pre{font-size: 14px; max-width: 90vw; overflow: auto;}
 }
 .cms-toolbar button:hover,
 .cms-actions button:hover,
+.cms-header-actions button:hover,
 .cms-queue button:hover { background: var(--bg-hover-color); }
 .cms-actions button:disabled,
+.cms-header-actions button:disabled,
 .cms-queue button:disabled { opacity: 0.55; cursor: wait; }
 .cms-actions .cms-primary { background: #0771ca; border-color: #0771ca; color: #fff; }
 #cms-content {
@@ -287,7 +291,6 @@ pre{font-size: 14px; max-width: 90vw; overflow: auto;}
   line-height: 1.5;
 }
 .cms-actions { margin-top: 10px; }
-.cms-preview-pane { min-width: 0; }
 .cms-preview-meta { font-size: 14px; margin-bottom: 12px; }
 .cms-preview-meta dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; margin: 0; }
 .cms-preview-meta dt { font-weight: 600; }
@@ -327,6 +330,5 @@ pre{font-size: 14px; max-width: 90vw; overflow: auto;}
 .cms-empty { opacity: 0.8; }
 
 @media only screen and (max-width: 900px) {
-  .cms-grid { grid-template-columns: 1fr; }
   #cms-content { min-height: 300px; }
 }

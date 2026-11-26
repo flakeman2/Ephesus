@@ -8,6 +8,7 @@
   const session = { role: null, csrf: null };
   let currentSlug = '';
   let previewTimer = null;
+  let previewVisible = false;
 
   const app = document.getElementById('cms-app');
   const authEl = document.getElementById('cms-auth');
@@ -17,6 +18,9 @@
   const passwordInput = document.getElementById('cms-password');
   const websiteInput = document.getElementById('cms-website');
   const roleBadge = document.getElementById('cms-role-badge');
+  const editorViewEl = document.getElementById('cms-editor-view');
+  const previewViewEl = document.getElementById('cms-preview-view');
+  const togglePreviewBtn = document.getElementById('cms-toggle-preview');
   const contentEl = document.getElementById('cms-content');
   const toolbarEl = document.getElementById('cms-toolbar');
   const previewEl = document.getElementById('cms-preview');
@@ -26,7 +30,7 @@
   const reviewListEl = document.getElementById('cms-review-list');
   const statusEl = document.getElementById('cms-status');
 
-  if (!app || !authEl || !workspaceEl || !contentEl) return;
+  if (!app || !authEl || !workspaceEl || !contentEl || !editorViewEl || !previewViewEl || !togglePreviewBtn) return;
 
   function starterPost() {
     const today = new Date().toISOString().slice(0, 10);
@@ -66,12 +70,21 @@ Write the post body here.
     session.csrf = null;
   }
 
+  function resetView() {
+    editorViewEl.hidden = false;
+    previewViewEl.hidden = true;
+    previewVisible = false;
+    togglePreviewBtn.textContent = 'Preview';
+  }
+
   function showAuth() {
+    resetView();
     authEl.hidden = false;
     workspaceEl.hidden = true;
   }
 
   function showWorkspace(role) {
+    resetView();
     authEl.hidden = true;
     workspaceEl.hidden = false;
     roleBadge.textContent = role;
@@ -175,7 +188,7 @@ Write the post body here.
       ['Permalink', data.permalink],
       ['Slug', data.slug],
       ['Tags', Array.isArray(data.tags) ? data.tags.join(', ') : null],
-      ['AI models', Array.isArray(data.ai_models) ? data.ai_models.join(', ') : null],
+      ['AI models (optional)', Array.isArray(data.ai_models) ? data.ai_models.join(', ') : null],
       ['Verification', data.verification],
     ];
     fields.forEach(([label, value]) => {
@@ -365,8 +378,27 @@ Write the post body here.
     }, 1500);
   });
 
-  document.getElementById('cms-refresh-preview').addEventListener('click', (event) => {
-    withBusy(event.currentTarget, () => refreshPreview({ announce: true }).catch((error) => setStatus(error.message, 'error')));
+  togglePreviewBtn.addEventListener('click', async () => {
+    if (togglePreviewBtn.disabled) return;
+    togglePreviewBtn.disabled = true;
+    try {
+      if (previewVisible) {
+        resetView();
+        return;
+      }
+      try {
+        await refreshPreview();
+      } catch (_) {
+        return;
+      }
+      editorViewEl.hidden = true;
+      previewViewEl.hidden = false;
+      previewVisible = true;
+      togglePreviewBtn.textContent = 'Edit';
+    } finally {
+      togglePreviewBtn.disabled = false;
+      togglePreviewBtn.textContent = previewVisible ? 'Edit' : 'Preview';
+    }
   });
 
   document.getElementById('cms-save').addEventListener('click', (event) => {
