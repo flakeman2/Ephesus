@@ -2,8 +2,6 @@
   'use strict';
 
   const API = '/post/api';
-  const VERIFICATION =
-    'Devin Flake read and verified every claim against the cluster and the repository before publishing.';
 
   const session = { role: null, csrf: null };
   let currentSlug = '';
@@ -42,12 +40,8 @@ author: Devin Flake
 layout: post
 permalink: /your-post-slug/
 tags: [general]
-ai_models:
-  - MiMo-V2.6-Flash
-verification: "${VERIFICATION}"
+verification: "I read and verified this post before publishing."
 ---
-
-AI models discussed: MiMo-V2.6-Flash
 
 Write the post body here.
 `;
@@ -59,11 +53,18 @@ Write the post body here.
       statusEl.hidden = true;
       statusEl.textContent = '';
       statusEl.className = 'cms-status';
+      delete statusEl.dataset.kind;
       return;
     }
     statusEl.hidden = false;
     statusEl.textContent = message;
     statusEl.className = `cms-status cms-status--${kind}`;
+    statusEl.dataset.kind = kind;
+  }
+
+  function clearProblemStatus() {
+    const kind = statusEl && statusEl.dataset.kind;
+    if (kind === 'warning' || kind === 'error') setStatus('');
   }
 
   function clearSession() {
@@ -260,6 +261,7 @@ Write the post body here.
       empty.className = 'cms-empty';
       empty.textContent = 'Start writing to see a preview.';
       previewEl.replaceChildren(empty);
+      clearProblemStatus();
       return null;
     }
 
@@ -270,8 +272,11 @@ Write the post body here.
       previewEl.innerHTML = sanitizeHTML(data.html || '');
       if (data.warnings) {
         setStatus(data.warnings, 'warning');
-      } else if (announce) {
-        setStatus(`Preview updated for “${data.title || data.slug}”.`, 'success');
+      } else {
+        clearProblemStatus();
+        if (announce) {
+          setStatus(`Preview updated for “${data.title || data.slug}”.`, 'success');
+        }
       }
       return data.slug;
     } catch (error) {
