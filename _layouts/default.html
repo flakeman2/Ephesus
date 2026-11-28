@@ -3,7 +3,7 @@
 	<div class="profile">
 		<div class="profile-image-container">
 			<a href="{{ site.url }}"><img src="{{site.author.picture}}" class="profile-image"></a>
-			{% if page.url == '/' %}
+			{% if page.url == '/' or page.layout == 'post' %}
 			<a class="profile-write-link" href="{{ site.url }}/post">Write</a>
 			{% endif %}
 		</div>
