@@ -80,15 +80,18 @@ description: Write, preview, and submit posts for the Flake blog.
         <p class="cms-empty">Sign in and start writing to see a preview.</p>
       </article>
     </div>
+  </section>
 
-    <div class="cms-queue">
-      <h3>Open drafts</h3>
-      <div id="cms-drafts-list"><p class="cms-empty">Loading drafts…</p></div>
-    </div>
-
-    <div id="cms-review" class="cms-queue" hidden>
-      <h3>Admin review queue</h3>
-      <div id="cms-review-list"><p class="cms-empty">Loading review queue…</p></div>
+  <section id="cms-queues" class="cms-card" aria-label="Drafts and review queue" hidden>
+    <div class="cms-queues-grid">
+      <div class="cms-queue">
+        <h3>Open drafts</h3>
+        <div id="cms-drafts-list"><p class="cms-empty">Loading drafts…</p></div>
+      </div>
+      <div id="cms-review" class="cms-queue" hidden>
+        <h3>Admin review queue</h3>
+        <div id="cms-review-list"><p class="cms-empty">Loading review queue…</p></div>
+      </div>
     </div>
   </section>
 </div>

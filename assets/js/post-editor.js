@@ -13,6 +13,7 @@
   const app = document.getElementById('cms-app');
   const authEl = document.getElementById('cms-auth');
   const workspaceEl = document.getElementById('cms-workspace');
+  const queuesEl = document.getElementById('cms-queues');
   const loginForm = document.getElementById('cms-login-form');
   const roleInput = document.getElementById('cms-role');
   const passwordInput = document.getElementById('cms-password');
@@ -30,12 +31,12 @@
   const reviewListEl = document.getElementById('cms-review-list');
   const statusEl = document.getElementById('cms-status');
 
-  if (!app || !authEl || !workspaceEl || !contentEl || !editorViewEl || !previewViewEl || !togglePreviewBtn) return;
+  if (!app || !authEl || !workspaceEl || !queuesEl || !contentEl || !editorViewEl || !previewViewEl || !togglePreviewBtn) return;
 
   function starterPost() {
     const today = new Date().toISOString().slice(0, 10);
     return `---
-title: ""
+title: "Your post title"
 date: ${today}
 author: Devin Flake
 layout: post
@@ -81,12 +82,14 @@ Write the post body here.
     resetView();
     authEl.hidden = false;
     workspaceEl.hidden = true;
+    queuesEl.hidden = true;
   }
 
   function showWorkspace(role) {
     resetView();
     authEl.hidden = true;
     workspaceEl.hidden = false;
+    queuesEl.hidden = false;
     roleBadge.textContent = role;
     reviewEl.hidden = role !== 'admin';
     document.getElementById('cms-publish').hidden = role !== 'admin';
@@ -265,7 +268,11 @@ Write the post body here.
       currentSlug = data.slug;
       renderMeta(data);
       previewEl.innerHTML = sanitizeHTML(data.html || '');
-      if (announce) setStatus(`Preview updated for “${data.title || data.slug}”.`, 'success');
+      if (data.warnings) {
+        setStatus(data.warnings, 'warning');
+      } else if (announce) {
+        setStatus(`Preview updated for “${data.title || data.slug}”.`, 'success');
+      }
       return data.slug;
     } catch (error) {
       if (!silent) setStatus(error.message, 'error');
@@ -380,21 +387,20 @@ Write the post body here.
 
   togglePreviewBtn.addEventListener('click', async () => {
     if (togglePreviewBtn.disabled) return;
+    if (previewVisible) {
+      resetView();
+      return;
+    }
     togglePreviewBtn.disabled = true;
+    togglePreviewBtn.textContent = 'Loading…';
     try {
-      if (previewVisible) {
-        resetView();
-        return;
-      }
-      try {
-        await refreshPreview();
-      } catch (_) {
-        return;
-      }
+      await refreshPreview();
       editorViewEl.hidden = true;
       previewViewEl.hidden = false;
       previewVisible = true;
-      togglePreviewBtn.textContent = 'Edit';
+    } catch (_) {
+      // refreshPreview already reported the error in the status box.
+      return;
     } finally {
       togglePreviewBtn.disabled = false;
       togglePreviewBtn.textContent = previewVisible ? 'Edit' : 'Preview';

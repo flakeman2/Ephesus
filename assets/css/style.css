@@ -313,8 +313,11 @@ pre{font-size: 14px; max-width: 90vw; overflow: auto;}
   overflow-wrap: anywhere;
 }
 .cms-status--error { border-color: #b00020; color: #b00020; }
+.cms-status--warning { border-color: #a15c00; color: #a15c00; }
 .cms-status--success { border-color: #1b7f3a; color: #1b7f3a; }
+.cms-queues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 .cms-queue { margin-top: 20px; }
+.cms-queues-grid .cms-queue { margin-top: 0; padding: 12px; border: 1px solid var(--border-color); }
 .cms-queue ul { list-style: none; margin: 0; padding: 0; }
 .cms-queue li { padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
 .cms-queue li:last-child { border-bottom: 0; }
